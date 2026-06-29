@@ -444,7 +444,7 @@ GameObject:
   - component: {fileID: 2111461963}
   - component: {fileID: 2111461962}
   - component: {fileID: 2111461961}
-  - component: {fileID: 2111461960}
+  - component: {fileID: 2111461965}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -452,22 +452,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2111461960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2111461959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efbaac0b63154e93ad2521284d2d09fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ModelPainter
-  textureSize: 1024
-  brushSize: 0.05
-  paintCamera: {fileID: 330585545}
-  selectedColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!64 &2111461961
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -562,6 +546,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2111461965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111461959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efbaac0b63154e93ad2521284d2d09fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelPainter
+  textureSize: 1024
+  brushSize: 0.05
+  paintCamera: {fileID: 330585545}
+  selectedColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

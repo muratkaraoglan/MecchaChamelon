@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ModelPainter : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class ModelPainter : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Mouse.current.leftButton.isPressed)
         {
             TryPaint();
         }
@@ -42,7 +43,7 @@ public class ModelPainter : MonoBehaviour
 
     private void TryPaint()
     {
-        Ray ray = paintCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = paintCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         
         if (Physics.Raycast(ray, out RaycastHit hit))
         {

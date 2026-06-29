@@ -11,6 +11,12 @@ public class ModelPainter : MonoBehaviour
 
     [SerializeField] private Color selectedColor;
 
+
+    [Range(0f, 1f)] [SerializeField] private float brushMetallic = 1f;
+    [Range(0f, 1f)] [SerializeField] private float brushSmoothness = 0.5f;
+    [SerializeField] private bool paintMetallic = false;
+
+    private Texture2D _metallicTexture;
     private RenderTexture _renderTexture;
     private Texture2D _paintTexture;
     private Material _targetMaterial;
@@ -24,12 +30,20 @@ public class ModelPainter : MonoBehaviour
     {
         var renderer = GetComponent<Renderer>();
         if (renderer == null) return;
-        
+
         _paintTexture = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
         FillTexture(_paintTexture, Color.white);
         _paintTexture.Apply();
 
+        _metallicTexture = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
+        FillTexture(_metallicTexture, new Color(0f, 0f, 0f, 0.5f));
+        _metallicTexture.Apply();
+
         _targetMaterial = renderer.material;
+        _targetMaterial.SetTexture("_MetallicGlossMap", _metallicTexture);
+        _targetMaterial.SetFloat("_Metallic", 0f);
+        _targetMaterial.SetFloat("_Smoothness", 0f);
+
         _targetMaterial.mainTexture = _paintTexture;
     }
 
@@ -44,7 +58,7 @@ public class ModelPainter : MonoBehaviour
     private void TryPaint()
     {
         Ray ray = paintCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        
+
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.transform != transform) return;
@@ -60,20 +74,25 @@ public class ModelPainter : MonoBehaviour
         int radius = (int)(brushSize * textureSize);
 
         for (int x = centerX - radius; x <= centerX + radius; x++)
+        for (int y = centerY - radius; y <= centerY + radius; y++)
         {
-            for (int y = centerY - radius; y <= centerY + radius; y++)
-            {
-                if (x < 0 || x >= textureSize || y < 0 || y >= textureSize) continue;
+            if (x < 0 || x >= textureSize || y < 0 || y >= textureSize) continue;
+            float dist = Vector2.Distance(new Vector2(x, y), new Vector2(centerX, centerY));
+            if (dist > radius) continue;
 
-                float dist = Vector2.Distance(new Vector2(x, y), new Vector2(centerX, centerY));
-                if (dist <= radius)
-                {
-                    _paintTexture.SetPixel(x, y, color);
-                }
+            if (paintMetallic)
+            {
+                Color m = new Color(brushMetallic, 0f, 0f, brushSmoothness);
+                _metallicTexture.SetPixel(x, y, m);
+            }
+            else
+            {
+                _paintTexture.SetPixel(x, y, color);
             }
         }
 
-        _paintTexture.Apply();
+        if (paintMetallic) _metallicTexture.Apply();
+        else _paintTexture.Apply();
     }
 
     private void FillTexture(Texture2D tex, Color color)
@@ -82,7 +101,7 @@ public class ModelPainter : MonoBehaviour
         for (int i = 0; i < pixels.Length; i++) pixels[i] = color;
         tex.SetPixels(pixels);
     }
-    
+
     public void ClearPainting()
     {
         FillTexture(_paintTexture, Color.white);
